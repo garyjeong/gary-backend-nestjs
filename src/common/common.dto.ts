@@ -2,11 +2,13 @@ import { IsNumber, IsObject, IsString } from 'class-validator';
 
 export class CommonResponseDto<T> {
   @IsNumber()
-  status_code: number;
-
-  @IsString()
-  error_message?: string;
+  _status_code: number;
 
   @IsObject()
-  data?: T[];
+  _data?: T | T[];
+
+  constructor(status_code: number, data?: T | T[]) {
+    this._status_code = status_code;
+    this._data = data;
+  }
 }

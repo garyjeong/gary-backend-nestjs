@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Folder } from 'src/entities';
+import { Folder } from 'src/typeorm/entities';
 
 @Injectable()
 export class FolderService {
