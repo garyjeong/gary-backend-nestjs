@@ -3,9 +3,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { Folder, Photo, PhotoFolder } from './entities';
-import { PhotoModule } from './photo/photo.module';
-import { FolderModule } from './folder/folder.module';
+import { Folder, Photo, PhotoFolder } from './typeorm/entities';
+import { PhotoModule } from './api/photo/photo.module';
+import { FolderModule } from './api/folder/folder.module';
 
 import * as path from 'path';
 
