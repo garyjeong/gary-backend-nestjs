@@ -9,35 +9,38 @@ import {
   Query,
 } from '@nestjs/common';
 import { FolderService } from './folder.service';
-import { CreateFolderDto, FolderDto } from './dtos/request.dto';
-import { FolderResponseDto } from './dtos/response.dto';
+
+import { ResponseFolderDto } from './dtos/response.dto';
 
 @Controller('folder')
 export class FolderController {
   constructor(private readonly folderService: FolderService) {}
 
-  @Get('/:uuid')
-  async getFolder(@Param() dto: FolderDto) {
-    return this.folderService.getFolder(dto);
-  }
-
   @Get()
-  async getFolderList() {
+  async getFolderList(): Promise<ResponseFolderDto[]> {
     return this.folderService.getFolderList();
   }
 
+  @Get('')
+  async getFolder(@Query('id') uuid: string): Promise<ResponseFolderDto> {
+    return this.folderService.getFolder(uuid);
+  }
+
   @Post()
-  async makeFolder(@Body() dto: CreateFolderDto) {
-    return this.folderService.makeFolder(dto);
+  async makeFolder(@Body('name') name: string): Promise<ResponseFolderDto> {
+    return this.folderService.makeFolder(name);
   }
 
-  @Patch('/:uuid')
-  async updateFolder(@Param() dto: FolderDto, @Body('name') name = '') {
-    return this.folderService.updateFolder(dto, name);
+  @Patch()
+  async updateFolder(
+    @Query('id') uuid: string,
+    @Body('name') name: string,
+  ): Promise<ResponseFolderDto> {
+    return this.folderService.updateFolder(uuid, name);
   }
 
-  @Delete('/:uuid')
-  async deleteFolder(@Param() dto: FolderDto) {
-    return this.folderService.deleteFolder(dto);
+  @Delete()
+  async deleteFolder(@Query('id') uuid: string): Promise<void> {
+    return this.folderService.deleteFolder(uuid);
   }
 }

@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Folder, Photo, PhotoFolder } from './typeorm/entities';
@@ -41,7 +39,5 @@ const config_file =
     PhotoModule,
     FolderModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

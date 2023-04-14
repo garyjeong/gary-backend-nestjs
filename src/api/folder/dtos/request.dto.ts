@@ -1,9 +1,28 @@
-import { IsString, IsUUID } from 'class-validator';
+import { IsString, IsUUID, Length } from 'class-validator';
 
-class FolderDto {
-  // TypeORM에서 버전 4의 UUID 생성기를 사용한다.
+class GetFolderDto {
   @IsUUID('4')
   uuid: string;
 }
 
-export { FolderDto };
+class MakeFolderDto {
+  @IsString()
+  @Length(20)
+  name: string;
+}
+
+class PatchFolderDto {
+  @IsUUID('4')
+  uuid: string;
+
+  @IsString()
+  @Length(20)
+  name: string;
+}
+
+class DeleteFolderDto {
+  @IsUUID('4')
+  uuid: string;
+}
+
+export { GetFolderDto, MakeFolderDto, PatchFolderDto, DeleteFolderDto };

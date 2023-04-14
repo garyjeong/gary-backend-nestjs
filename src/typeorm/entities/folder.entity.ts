@@ -30,8 +30,8 @@ export class Folder {
 
   @Column({
     type: 'varchar',
-    length: 50,
-    nullable: true,
+    length: 20,
+    nullable: false,
     comment: '폴더 이름',
   })
   name: string;

@@ -14,7 +14,6 @@ dotenv.config({
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
   await app
     .listen(process.env.SERVICE_PORT)
     .then(() => console.log(`SERVICE START: ${process.env.SERVICE_PORT}`));
