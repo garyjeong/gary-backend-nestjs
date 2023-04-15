@@ -7,6 +7,7 @@ import {
   DeleteDateColumn,
   Generated,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { Photo } from './photo.entity';
 
@@ -45,6 +46,6 @@ export class Folder {
   @DeleteDateColumn({ type: 'timestamp' })
   deleted_at?: Date | null;
 
-  @ManyToOne(() => Photo, (photo) => photo.uuid)
-  photo: Photo[];
+  @OneToMany(() => Photo, (photo) => photo.uuid)
+  photos: Photo[];
 }

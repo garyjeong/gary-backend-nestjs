@@ -5,9 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Folder } from 'src/typeorm/entities';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Folder]), // 여기에 FolderRepository 추가
-  ],
+  imports: [TypeOrmModule.forFeature([Folder])],
   providers: [FolderService],
   controllers: [FolderController],
 })

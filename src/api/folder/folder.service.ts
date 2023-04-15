@@ -17,22 +17,17 @@ export class FolderService {
     private readonly folderRepository: Repository<Folder>,
   ) {}
 
-  async getFolderList(): Promise<ResponseFolderDto[]> {
+  async getFolder(uuid: string): Promise<Folder | Folder[]> {
     try {
-      return await this.folderRepository.find({
-        where: {
-          deleted_at: null,
-        },
-      });
-    } catch (e) {
-      return e;
-    }
-  }
-
-  async getFolder(uuid: string): Promise<ResponseFolderDto> {
-    try {
-      if (uuid) {
-        throw new CustomInvalidError('검색 조건이 없습니다.');
+      if (!uuid) {
+        return await this.folderRepository.find({
+          where: {
+            deleted_at: null,
+          },
+        });
+      }
+      if (!validate(uuid)) {
+        throw new CustomInternalError('검색 ID가 유효하지 않습니다.');
       }
 
       return await this.folderRepository.findOne({
@@ -57,19 +52,22 @@ export class FolderService {
 
   async updateFolder(uuid: string, name: string): Promise<ResponseFolderDto> {
     try {
+      if (!uuid) {
+        throw new CustomInvalidError('검색 조건이 없습니다.');
+      }
       if (!validate(uuid)) {
         throw new CustomInternalError('검색 ID가 유효하지 않습니다.');
       }
 
-      const target = await this.folderRepository.findOne({
+      const folder = await this.folderRepository.findOne({
         where: { uuid: uuid },
       });
 
-      if (!target) {
+      if (!folder) {
         throw new ORMError(`Not Found Folder : ${uuid}`);
       }
-      target.name = name;
-      return await this.folderRepository.save(target);
+      folder.name = name;
+      return await this.folderRepository.save(folder);
     } catch (e) {
       return e;
     }
@@ -77,19 +75,22 @@ export class FolderService {
 
   async deleteFolder(uuid: string): Promise<any> {
     try {
+      if (!uuid) {
+        throw new CustomInvalidError('검색 조건이 없습니다.');
+      }
       if (!validate(uuid)) {
         throw new CustomInternalError('검색 ID가 유효하지 않습니다.');
       }
 
-      const target = await this.folderRepository.findOne({
+      const folder = await this.folderRepository.findOne({
         where: { uuid: uuid },
       });
 
-      if (!target) {
+      if (!folder) {
         throw new ORMError(`Not Found Folder : ${uuid}`);
       }
 
-      await this.folderRepository.softDelete({ uuid: uuid });
+      await this.folderRepository.softDelete({ uuid: folder.uuid });
     } catch (e) {
       return e;
     }
