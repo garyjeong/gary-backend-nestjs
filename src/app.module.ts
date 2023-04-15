@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { Folder, Photo, PhotoFolder } from './typeorm/entities';
+import { Folder, Photo } from './typeorm/entities';
 import { PhotoModule } from './api/photo/photo.module';
 import { FolderModule } from './api/folder/folder.module';
 
@@ -27,7 +27,7 @@ const config_file =
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [Photo, Folder, PhotoFolder],
+        entities: [Photo, Folder],
         migrations: [__dirname + '**/migrations/*.ts'],
         synchronize: configService.get('DB_SYNC'),
         timezone: 'z',

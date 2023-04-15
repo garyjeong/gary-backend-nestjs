@@ -6,9 +6,9 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   Generated,
-  OneToMany,
+  ManyToOne,
 } from 'typeorm';
-import { PhotoFolder } from './photofolder.entity';
+import { Photo } from './photo.entity';
 
 @Entity({
   name: 'folder',
@@ -45,6 +45,6 @@ export class Folder {
   @DeleteDateColumn({ type: 'timestamp' })
   deleted_at?: Date | null;
 
-  @OneToMany(() => PhotoFolder, (photoFolder) => photoFolder.folder)
-  photoFolders: PhotoFolder[];
+  @ManyToOne(() => Photo, (photo) => photo.uuid)
+  photo: Photo[];
 }
