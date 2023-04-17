@@ -14,13 +14,9 @@ import { Folder } from './folder.entity';
   name: 'photo',
 })
 export class Photo {
-  @PrimaryGeneratedColumn({
-    comment: '사진 Row ID',
-  })
-  id: number;
-
   @Column({
     type: 'varchar',
+    primary: true,
     unique: true,
     nullable: false,
     comment: '사진 UUID, Front 제공용 ID',
