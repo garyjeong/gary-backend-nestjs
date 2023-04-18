@@ -1,7 +1,7 @@
 name: PR merge check
 
 on:
-  push:
+  pull_request:
     branches:
       - main
       - develop
