@@ -1,28 +1,34 @@
-name: PR merge check
+name: My Workflow
+on: [push]
 
-on:
-  push:
-    branches:
-      - main
-      - develop
-      - stage
 jobs:
-  check_merge:
+  list-pull-requests:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true
     steps:
-      - name: Checkout pull request branch
+      - name: List pull requests
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: pulls } = await github.pulls.list({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open'
+            });
+            console.log(pulls.map(pull => pull.number).join(', '));
+      - name: Checkout code
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
-
-      - name: Get commit log
-        run: git log -1
-
-      - name: Check if merge commit
+          ref: develop
+      - name: Check branches containing features
         run: |
-          if git log -1 --merges --pretty=format:'%h' | grep -q .; then
-            echo "Pull request was merged !!!!."
-          else
-            echo "Pull request was not merged."
-          fi
+          git fetch --all
+          for pull_url in $(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls?state=open" \
+              | grep -oP '(?<="url": ")[^"]*'); do
+            feature_branch=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              $pull_url \
+              | grep -oP '(?<="ref": ")[^"]*' \
+              | sed "s/.*:\\(.*\\)/\\1/")
+            git branch --contains $feature_branch
+          done
