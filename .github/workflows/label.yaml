@@ -1,22 +1,28 @@
-name: Merge Workflow
+name: PR merge check
+
 on:
   pull_request:
-    types: [opened, reopened, closed]
     branches:
       - main
       - develop
       - stage
 jobs:
-  add-label:
+  check_merge:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true
     steps:
-    - name: Get branch name
-      run: |
-        echo "Merged branch name: ${{ github.event.pull_request.head.ref }}"
-    - name: Add custom label
-      uses: actions-ecosystem/action-add-labels@v1
-      with:
-        labels: 'custom test label'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout pull request branch
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Get commit log
+        run: git log -1
+
+      - name: Check if merge commit
+        run: |
+          if git log -1 --merges --pretty=format:'%h' | grep -q .; then
+            echo "Pull request was merged."
+          else
+            echo "Pull request was not merged."
+          fi
