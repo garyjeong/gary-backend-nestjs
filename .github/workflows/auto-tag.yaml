@@ -22,7 +22,7 @@ jobs:
       - name: Check if merge commit
         run: |
           if git log -1 --merges --pretty=format:'%h' | grep -q .; then
-            echo "Pull request was merged."
+            echo "Pull request was merged !!!!."
           else
             echo "Pull request was not merged."
           fi
