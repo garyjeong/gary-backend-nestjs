@@ -4,6 +4,8 @@ on:
     types: [closed]
     branches:
       - main
+      - develop
+      - stage
 jobs:
   add-label:
     runs-on: ubuntu-latest
