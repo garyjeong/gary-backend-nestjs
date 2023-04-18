@@ -120,10 +120,3 @@ jobs:
         run: |
           git merge ${{ github.event.ref }}
           echo "Merged branch ${{ github.event.ref }} into develop"
-
-
-  # push:
-  #   branches-ignore:
-  #     - feature/*
-  #     - hotfix/*
-  #     - dependabot/*
