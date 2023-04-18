@@ -1,39 +1,22 @@
-name: 'Labeling to Pull Request'
-
+name: Merge Workflow
 on:
   pull_request:
-    types: ['opened', 'reopened', 'closed']
+    types: [closed]
     branches:
-      - feature/*
-  push:
-    branches-ignore:
-      - feature/*
-      - hotfix/*
-      - dependabot/*
-
-permissions:
-  pull-requests: write
-
+      - main
+      - develop
+      - stage
 jobs:
   add-label:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
     steps:
-      - uses: actions/checkout@v2
-
-      - name: Condition Stage
-        uses: actions-ecosystem/action-add-labels@v1
-        if: github.event.ref == 'refs/heads/stage'
-        with:
-          github_token: ${{ github.token }}
-          labels: stage
-          repo: garyjeong/gary-backend-nestjs
-          number: ${{ github.event.pull_request.number }}
-      
-      - name: Check Values for github
-        run: |
-          echo ${{ github.event_name }}
-          echo $github.event_name
-          echo ${{ github.event.action }}
-          echo $github.event.action
-          echo ${{ github.event.pull_request.merged }}
-          echo $github.event.pull_request.merged
+    - name: Get branch name
+      run: |
+        echo "Merged branch name: ${{ github.event.pull_request.head.ref }}"
+    - name: Add custom label
+      uses: actions-ecosystem/action-add-labels@v1
+      with:
+        labels: 'custom label'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
