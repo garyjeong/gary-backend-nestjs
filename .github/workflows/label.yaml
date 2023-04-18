@@ -11,8 +11,6 @@ on:
       - hotfix/*
       - dependabot/*
 
-permissions:
-  pull-requests: write
 
 jobs:
   add-label:
