@@ -1,0 +1,122 @@
+# name: "Labeler for Pull Request"
+
+# on:
+#     pull_request:
+#         types: [opened, reopened, synchronize]
+
+# jobs:
+#   labeling:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+
+#       - name: Install dependencies
+#         run: |
+#             npm install @octokit/rest@18.0.3
+#             npm install @actions/github
+#             npm install
+
+#       - name: Add Label
+#         uses: actions/github-script@v4
+#         with:
+#           github-token: ${{ secrets.GITHUB_TOKEN }}
+#           script: |
+#             const { Octokit } = require("@octokit/rest");
+#             const gh = new Octokit({
+#                 auto: process.env.GITHUB_TOKEN
+#             });
+#             const branchName = process.env.GITHUB_REF.split('/').pop();
+#             const labels = [];
+#             if (branchName === 'main') {
+#               labels.push('production');
+#             } else if (branchName === 'develop') {
+#               labels.push('develop');
+#             } else if (branchName === 'stage') {
+#               labels.push('stage');
+#             } else {
+#               labels.push('etc');
+#             }
+
+#             if (labels.length > 0) {
+#               const { data } = await gh.pulls.get({
+#                 owner: context.repo.owner,
+#                 repo: context.repo.repo,
+#                 pull_number: context.payload.pull_request.number,
+#               });
+#               if (data) {
+#                 await gh.issues.addLabels({
+#                   owner: context.repo.owner,
+#                   repo: context.repo.repo,
+#                   issue_number: data.number,
+#                   labels: labels,
+#                 });
+#               } else {
+#                 console.log('No data found for pull request', context.payload.pull_request.number);
+#               }
+#             }
+
+# name: 'Labeling to Pull Request'
+
+# on:
+#   push:
+#     branches-ignore:
+#       - feature/*
+#       - hotfix/*
+#       - dependabot/*
+#   pull_request:
+#     types: ['closed']
+#     branches:
+#       - feature/*
+
+# permissions:
+#   pull-requests: write
+
+# jobs:
+#   add-label:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Checkout code
+#         env:
+#           PR_NUMBER: ${{ toJson(github.event.number) }}
+#         run: |
+#           echo "$PR_NUMBER"
+#           echo "GITHUB -----"
+#           echo "$github"
+
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: '16.x'
+
+#       - name: Get merged branch and merge target branch
+#         # if: github.event_name == 'push' && github.ref == 'refs/heads/main' && contains(github.event.head_commit.message, 'Merge pull request')
+#         run: |
+#           branch_name=$(echo "$GITHUB_EVENT_NAME" | jq -r ".pull_request.head.ref")
+#           base_branch=$(echo "$GITHUB_EVENT_NAME" | jq -r ".pull_request.base.ref")
+#           echo "Merged branch: $branch_name"
+#           echo "Base branch: $base_branch"
+
+#       # - name: Condition Stage
+#       #   uses: actions-ecosystem/action-add-labels@v1
+#       #   if: github.event.pull_request.merged == true && env.BASE_BRANCH == 'stage'
+#       #   with:
+#       #     github_token: ${{ github.token }}
+#       #     labels: stage
+name: Merge feature/a into develop
+
+on:
+  push:
+    branches:
+      - stage
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Merge feature/a into develop
+        run: |
+          git merge ${{ github.event.ref }}
+          echo "Merged branch ${{ github.event.ref }} into develop"
