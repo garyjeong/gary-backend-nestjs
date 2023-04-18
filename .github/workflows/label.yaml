@@ -1,7 +1,7 @@
 name: Merge Workflow
 on:
   pull_request:
-    types: [opened, reopened, closed]
+    types: [closed]
     branches:
       - main
       - develop
