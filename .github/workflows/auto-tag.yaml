@@ -32,7 +32,7 @@ jobs:
           fi
 
           echo "test"
-          echo "$(FILTERED_BRANCHES)"
+          echo git branch --contains feature/pppp
 
           for branch in $FILTERED_BRANCHES; do
             echo "1---- $CURRENT_BRANCH"
