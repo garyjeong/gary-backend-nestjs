@@ -15,10 +15,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Install GitHub CLI
-        uses: cli-action/setup@v2
-
+        
       - name: Labeling on filtered branches
         run: |
           git fetch
