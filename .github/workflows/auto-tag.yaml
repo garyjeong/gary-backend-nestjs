@@ -20,7 +20,7 @@ jobs:
         run: |
           export FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "feature/.*")
           echo "FIL BRANCH: ${FILTERED_BRANCHES}"
-          echo "::set-env name=FILTERED_BRANCHES::$FILTERED_BRANCHES"
+          echo "FILTERED_BRANCHES=${FILTERED_BRANCHES}" >> $GITHUB_ENV
 
       - name: Labeling on filtered branches
         run: |
