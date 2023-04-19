@@ -11,6 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: My step
-        uses: my-action@v1
+        uses: actions/checkout@v2
         with:
           branches: ${{ matrix.branches }}
