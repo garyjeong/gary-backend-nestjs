@@ -21,7 +21,6 @@ jobs:
 
       - name: Labeling on filtered branches
         run: |
-          FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "feature/.*")
           CURRENT_BRANCH=$(git branch --show-current)
           LABEL=""
 
