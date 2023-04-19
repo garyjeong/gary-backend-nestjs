@@ -34,7 +34,7 @@ jobs:
           for branch in $FILTERED_BRANCHES; do
             echo "1---- $CURRENT_BRANCH"
             echo "4---- $branch"
-            GET_MERGED = $(git branch --contains $branch)
+            GET_MERGED=$(git branch --contains $branch)
             echo "MGMG: &GET_MERGED"
             if git branch --contains $branch; then
               echo '5 ---------------'
