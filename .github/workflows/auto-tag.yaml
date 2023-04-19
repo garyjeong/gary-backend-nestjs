@@ -2,8 +2,7 @@ name: My Workflow
 on:
   push:
     branches:
-      - front
-      - qa
+      - stage
 
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
