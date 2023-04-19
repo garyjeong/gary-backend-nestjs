@@ -35,7 +35,13 @@ jobs:
             if git branch --contains $branch | grep "$CURRENT_BRANCH"; then
               echo "$(gh pr list --state open | grep -m1 feature/${branch##*/})"
               PR_NUMBER=$(gh pr list --state open | grep -m1 feature/${branch##*/} | awk '{print $1}')
-              echo "PR : $PR_NUMBER"
+              echo "PR : $PR_NUMBER ///// LABEL : $LABEL"
+
+              curl --request POST \
+                --url https://api.github.com/repos/garyjeong/gary-backend-nestjs/issues/$PR_NUMBER/labels \
+                --header 'authorization: Bearer ${{ secrets.ACTION_TOKEN }}' \
+                --header 'content-type: application/json' \
+                --data '{"labels": ["'"$LABEL"'"]}'
             fi
           done
 
