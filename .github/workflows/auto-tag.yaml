@@ -7,7 +7,7 @@ on:
       - stage
 
 env:
-  FILTERED_BRANCHES: ""
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   list-pull-requests:
@@ -34,11 +34,13 @@ jobs:
           for branch in $FILTERED_BRANCHES; do
             if git branch --contains $branch | grep "$CURRENT_BRANCH"; then
               gh pr list --state open | grep $branch | awk '{print $1}'
-              PR_NUMBER=$(gh pr list --state open | grep -m1 "$branch" | awk '{print $1}')
+             
+              PR_NUMBER=$(gh pr list --json number,state,headRefName --state open | jq --arg branch "$branch" -r '.[] | select(.headRefName == $branch) | select(.state == "OPEN") | .number')
               echo "PR NUM : $PR_NUMBER"
+
               curl --request POST \
                 --url https://api.github.com/repos/garyjeong/gary-backend-nestjs/issues/$PR_NUMBER/labels \
-                --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+                --header 'authorization: Bearer ${{ env.GH_TOKEN }}' \
                 --header 'content-type: application/json' \
                 --data '{"labels": ["'"$LABEL"'"]}'
             fi
