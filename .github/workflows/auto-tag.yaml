@@ -36,6 +36,8 @@ jobs:
             echo "2---- $FILTERED_BRANCHES"
             echo "3---- $LABEL"
             echo "4---- $branch"
+            GET_MERGED = $(git branch --contains $branch)
+            echo "MGMG: &GET_MERGED"
             if git branch --contains $branch; then
               echo '5 ---------------'
               gh pr list --state open | grep $branch | awk '{print $1}'
