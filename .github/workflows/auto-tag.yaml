@@ -10,30 +10,35 @@ jobs:
   list-pull-requests:
     runs-on: ubuntu-latest
     steps:
-      - name: List pull requests
-        uses: actions/github-script@v5
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const { data: pulls } = await github.pulls.list({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open'
-            });
-            console.log(pulls.map(pull => pull.number).join(', '));
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          ref: develop
-      - name: Check branches containing features
+
+      - name: Filtering Feature Branches
         run: |
-          git fetch --all
-          for pull_url in $(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              "https://api.github.com/repos/${GITHUB_REPOSITORY}/pulls?state=open" \
-              | grep -oP '(?<="url": ")[^"]*'); do
-            feature_branch=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              $pull_url \
-              | grep -oP '(?<="ref": ")[^"]*' \
-              | sed "s/.*:\\(.*\\)/\\1/")
-            git branch --contains $feature_branch
+          export FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "feature/*")
+
+      - name: Labeling on filtered branches
+        run: |
+          CURRENT_BRANCH=$(git branch --show-current)
+          LABEL=""
+
+          if [[ $CURRENT_BRANCH == 'main' ]]; then
+            LABEL='production'
+          elif [[ $CURRENT_BRANCH == 'develop' ]]; then
+            LABEL='develop'
+          elif [[ $CURRENT_BRANCH == 'stage' ]]; then
+            LABEL='stage'
+          fi
+
+          for branch in $FILTERED_BRANCHES; do
+            if git branch --contains $CURRENT_BRANCH $branch >/dev/null 2>&1; then
+
+              echo "Adding label to $branch"
+              curl --request POST \
+                --url https://api.github.com/repos/{owner}/{repo}/issues/$NUMBER/labels \
+                --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+                --header 'content-type: application/json' \
+                --data "{\"labels\": [\"$LABEL\"]}"
+            fi
           done
+        
