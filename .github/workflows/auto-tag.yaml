@@ -33,7 +33,6 @@ jobs:
 
           for branch in $FILTERED_BRANCHES; do
             if git branch --contains $branch | grep "$CURRENT_BRANCH"; then
-              gh pr list --state open | grep $branch | awk '{print $1}'
               PR_NUMBER=$(gh pr list --state open | grep -m1 "$branch" | awk '{print $1}')
               echo "PR NUM : $PR_NUMBER"
               curl --request POST \
@@ -44,3 +43,8 @@ jobs:
             fi
           done
         
+      - name: test
+        run: |
+          git fetch
+          git checkout develop
+          gh pr list --state open | grep -m1 feature/testttt | awk '{print $1}'
