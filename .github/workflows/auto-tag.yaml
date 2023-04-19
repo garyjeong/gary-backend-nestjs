@@ -6,6 +6,9 @@ on:
       - develop
       - stage
 
+env:
+  FILTERED_BRANCHES: ""
+
 jobs:
   list-pull-requests:
     runs-on: ubuntu-latest
@@ -13,9 +16,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Filtering Feature Branches
+        run: |
+          export FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "feature/.*")
+          echo "FIL BRANCH: ${FILTERED_BRANCHES}"
+          echo "::set-env name=FILTERED_BRANCHES::$FILTERED_BRANCHES"
+
       - name: Labeling on filtered branches
         run: |
-          FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "feature/.*")
           CURRENT_BRANCH=$(git branch --show-current)
           LABEL=""
 
