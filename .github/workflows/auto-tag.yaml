@@ -19,7 +19,7 @@ jobs:
       - name: Branch Check
         run: |
           git fetch
-          git branch --remotes --list | grep -o ".*"
+          git branch --remotes --list | grep -o "origin/feature/.*"
 
 
       - name: Filtering Feature Branches
