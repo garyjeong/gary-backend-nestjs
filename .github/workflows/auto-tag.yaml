@@ -10,7 +10,9 @@ jobs:
   list-pull-requests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Filtering Feature Branches
         run: |
           export FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "feature/.*")
@@ -39,7 +41,8 @@ jobs:
           for branch in $FILTERED_BRANCHES; do
             if git branch --contains $CURRENT_BRANCH $branch >/dev/null 2>&1; then
               PR_NUMBER=$(gh pr list --state open | grep "$branch" | awk '{print $1}')
-              echo "Adding label to $branch"
+              echo "ADD LABEL : $branch"
+              echo "PR NUM" : $PR_NUMBER"
               curl --request POST \
                 --url https://api.github.com/repos/{owner}/{repo}/issues/$PR_NUMBER/labels \
                 --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
