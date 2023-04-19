@@ -16,6 +16,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+
+      - name: Set up GitHub CLI
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: '14'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Labeling on filtered branches
         run: |
           git fetch
