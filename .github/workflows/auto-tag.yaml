@@ -30,7 +30,6 @@ jobs:
 
       - name: Labeling on filtered branches
         run: |
-          FILTERED_BRANCHES=${{ FILTERED_BRANCHES }}
           CURRENT_BRANCH=$(git branch --show-current)
           LABEL=""
 
