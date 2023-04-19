@@ -10,9 +10,6 @@ jobs:
   list-pull-requests:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Filtering Feature Branches
         run: |
           export FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "feature/.*")
