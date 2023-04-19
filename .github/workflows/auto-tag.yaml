@@ -34,9 +34,9 @@ jobs:
           fi
 
 
-          echo "CUR BRANCH: &CURRENT_BRANCH"
-          echo "FIL BRANCH: &FILTERED_BRANCHES"
-          echo "LABEL : &LABEL"
+          echo "CUR BRANCH: ${CURRENT_BRANCH}"
+          echo "FIL BRANCH: ${FILTERED_BRANCHES}"
+          echo "LABEL : ${LABEL}"
           
           for branch in $FILTERED_BRANCHES; do
             if git branch --contains $CURRENT_BRANCH $branch >/dev/null 2>&1; then
