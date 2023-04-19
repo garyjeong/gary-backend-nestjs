@@ -19,7 +19,7 @@ jobs:
       - name: Labeling on filtered branches
         run: |
           git fetch
-          FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "feature/.*")
+          FILTERED_BRANCHES=$(git branch --remotes --list | grep "feature/.*")
           CURRENT_BRANCH=$(git branch --show-current)
           LABEL=""
 
@@ -31,16 +31,8 @@ jobs:
             LABEL='stage'
           fi
 
-          echo "test"
-          echo "$(git branch --contains feature/pppp)"
-
           for branch in $FILTERED_BRANCHES; do
-            echo "1---- $CURRENT_BRANCH"
-            echo "2---- $FILTERED_BRANCHES"
-            echo "3---- $LABEL"
-            echo "4---- $branch"
-            if git branch --contains $branch; then
-              echo '5 ---------------'
+            if git branch --contains $branch | grep "$CURRENT_BRANCH"; then
               gh pr list --state open | grep $branch | awk '{print $1}'
               PR_NUMBER=$(gh pr list --state open | grep -m1 "$branch" | awk '{print $1}')
               echo "PR NUM : $PR_NUMBER"
