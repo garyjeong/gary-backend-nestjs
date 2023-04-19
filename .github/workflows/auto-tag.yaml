@@ -39,11 +39,13 @@ jobs:
 
               curl --request POST \
                 --url https://api.github.com/repos/garyjeong/gary-backend-nestjs/issues/$PR_NUMBER/labels \
-                --header 'authorization: Bearer ${{ env.GH_TOKEN }}' \
+                --header 'authorization: Bearer ${{ secrets.ACTION_TOKEN }}' \
                 --header 'content-type: application/json' \
                 --data '{"labels": ["'"$LABEL"'"]}'
             fi
           done
+
+          export FILTERED_BRANCHES=$FILTERED_BRANCHES
         
       - name: test
         run: |
