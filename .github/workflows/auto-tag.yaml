@@ -34,7 +34,7 @@ jobs:
           for branch in $FILTERED_BRANCHES; do
             if git branch --contains $branch | grep "$CURRENT_BRANCH"; then
               PR_NUMBER=$(gh pr list --state open | grep -m1 "${branch##/}" | awk '{print $1}')
-              echo "BRBRBR: $branch"
+              echo "BRBRBR: $branch / ${branch##/}"
               curl --request POST \
                 --url https://api.github.com/repos/garyjeong/gary-backend-nestjs/issues/$PR_NUMBER/labels \
                 --header 'authorization: Bearer ${{ env.GH_TOKEN }}' \
