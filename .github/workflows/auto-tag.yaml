@@ -33,6 +33,6 @@ jobs:
             if git branch --contains $branch | grep "$CURRENT_BRANCH"; then
               PR_NUMBER=$(gh pr list --state open | grep -m1 feature/${branch##*/} | awk '{print $1}')
 
-              curl -X POST https://api.github.com/repos/:owner/:repo/issues/$PR_NUMBER/labels -H "Authorization: Bearer ${{ env.GH_TOKEN }}" -d '{"labels": ["'"$LABEL"'"]}'
+              curl -X POST https://api.github.com/repos/${{github.repository_owner}}/${{github.repository}}/issues/$PR_NUMBER/labels -H "Authorization: Bearer ${{ env.GH_TOKEN }}" -d '{"labels": ["'"$LABEL"'"]}'
             fi
           done
