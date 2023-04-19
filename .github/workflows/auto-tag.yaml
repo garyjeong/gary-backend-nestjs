@@ -16,16 +16,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Filtering Feature Branches
-        run: |
-          export FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "feature/.*")
-          
-          echo "FIL BRANCH: ${FILTERED_BRANCHES}"
-
       - name: Labeling on filtered branches
         run: |
-          FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "feature/.*")
-          echo "FIL BRANCH: ${FILTERED_BRANCHES}"
+          git fetch
+          FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "origin/feature/.*")
           CURRENT_BRANCH=$(git branch --show-current)
           LABEL=""
 
@@ -37,20 +31,16 @@ jobs:
             LABEL='stage'
           fi
 
-
-          echo "CUR BRANCH: ${CURRENT_BRANCH}"
-          echo "FIL BRANCH: ${FILTERED_BRANCHES}"
-          echo "LABEL : ${LABEL}"
-          
           for branch in $FILTERED_BRANCHES; do
-            if git branch --contains $CURRENT_BRANCH $branch >/dev/null 2>&1; then
-              PR_NUMBER=$(gh pr list --state open | grep "$branch" | awk '{print $1}')
-              echo "Adding label to $branch"
+            echo "ADD LABEL TO : $branch"
+            if git branch --contains $branch; then
+              PR_NUMBER=$(gh pr list --state open | grep $branch | awk '{print $1}')
+              echo "PR NUM : $PR_NUMBER"
               curl --request POST \
-                --url https://api.github.com/repos/{owner}/{repo}/issues/$PR_NUMBER/labels \
-                --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+                --url https://api.github.com/repos/garyjeong/gary-backend-nestjs/issues/$PR_NUMBER/labels \
+                --header 'authorization: Bearer ${{ secrets.ACTION_TOKEN }}' \
                 --header 'content-type: application/json' \
-                --data "{\"labels\": [\"$LABEL\"]}"
+                --data '{"labels": ["'"$LABEL"'"]}'
             fi
           done
         
