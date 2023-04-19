@@ -36,7 +36,7 @@ jobs:
             echo "ADD LABEL TO : $branch"
             if git branch --contains $branch; then
               PR_NUMBER=$(gh pr list --state open | grep "$branch" | awk '{print $1}')
-              echo "PR NUM" : $PR_NUMBER"
+              echo "PR NUM : $PR_NUMBER"
               curl --request POST \
                 --url https://api.github.com/repos/garyjeong/gary-backend-nestjs/issues/$PR_NUMBER/labels \
                 --header 'authorization: Bearer ${{ secrets.ACTION_TOKEN }}' \
