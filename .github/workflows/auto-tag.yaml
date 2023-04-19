@@ -29,6 +29,10 @@ jobs:
           elif [[ $CURRENT_BRANCH == 'stage' ]]; then
             LABEL='stage'
           fi
+          
+          echo "CU BRANCH : ${CURRENT_BRANCH}"
+          echo "FIL BRANCH : ${FILTERED_BRANCHES}"
+          echo "LABEL : ${LABEL}"
 
           for branch in $FILTERED_BRANCHES; do
             if git branch --contains $CURRENT_BRANCH $branch >/dev/null 2>&1; then
