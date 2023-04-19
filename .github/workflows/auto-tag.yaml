@@ -18,6 +18,7 @@ jobs:
 
       - name: Branch Check
         run: |
+          git fetch
           git branch --remotes --list | grep -o ".*"
 
 
