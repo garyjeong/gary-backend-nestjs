@@ -15,20 +15,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Branch Check
-        run: |
-          git fetch
-          git branch --remotes --list | grep -o "origin/feature/.*"
-
-
-      - name: Filtering Feature Branches
-        run: |
-          export FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "origin/feature/.*")
-          echo "FILTERED_BRANCHES=${FILTERED_BRANCHES}" >> $GITHUB_ENV
-
+        
       - name: Labeling on filtered branches
         run: |
+          git fetch
+          FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "origin/feature/.*")
           CURRENT_BRANCH=$(git branch --show-current)
           LABEL=""
 
