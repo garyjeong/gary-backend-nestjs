@@ -19,11 +19,13 @@ jobs:
       - name: Filtering Feature Branches
         run: |
           export FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "feature/.*")
-          echo "FIL BRANCH: ${FILTERED_BRANCHES}"
           echo "FILTERED_BRANCHES=${FILTERED_BRANCHES}" >> $GITHUB_ENV
 
       - name: Labeling on filtered branches
         run: |
+          echo "FIL BRANCH: ${FILTERED_BRANCHES}"
+          echo "FIL BRANCH2: ${env.FILTERED_BRANCHES}"
+
           CURRENT_BRANCH=$(git branch --show-current)
           LABEL=""
 
