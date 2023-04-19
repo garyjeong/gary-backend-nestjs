@@ -7,7 +7,7 @@ on:
       - stage
 
 env:
-  FILTERED_BRANCHES: ""
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   list-pull-requests:
@@ -38,7 +38,7 @@ jobs:
               echo "PR NUM : $PR_NUMBER"
               curl --request POST \
                 --url https://api.github.com/repos/garyjeong/gary-backend-nestjs/issues/$PR_NUMBER/labels \
-                --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+                --header 'authorization: Bearer ${{ env.GH_TOKEN }}' \
                 --header 'content-type: application/json' \
                 --data '{"labels": ["'"$LABEL"'"]}'
             fi
