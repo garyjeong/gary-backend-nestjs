@@ -34,7 +34,7 @@ jobs:
               PR_NUMBER=$(gh pr list --state open | grep -m1 feature/${branch##*/} | awk '{print $1}')
 
               curl --request POST \
-                --url https://api.github.com/repos/Rencar-dev/overseas-api/issues/$PR_NUMBER/labels \
+                --url https://api.github.com/repos/garyjeong/gary-backend-nestjs/issues/$PR_NUMBER/labels \
                 --header 'authorization: Bearer ${{ secrets.GH_TOKEN }}' \
                 --header 'content-type: application/json' \
                 --data '{"labels": ["'"$LABEL"'"]}'
