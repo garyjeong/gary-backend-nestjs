@@ -15,7 +15,7 @@ jobs:
 
       - name: Filtering Feature Branches
         run: |
-          export FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "feature/*")
+          export FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "feature/.*")
 
       - name: Labeling on filtered branches
         run: |
