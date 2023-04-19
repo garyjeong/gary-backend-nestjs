@@ -5,12 +5,26 @@ on:
       - main
       - develop
       - stage
-      
+
 jobs:
-  my-job:
+  list-pull-requests:
     runs-on: ubuntu-latest
     steps:
-      - name: My step
+      - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          branches: ${{ matrix.branches }}
+
+      - name: Filtering Feature Branches
+        run: |
+          export FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "feature/*")
+
+      - name: Do something on filtered branches
+        run: |
+          CURRENT_BRANCH=$(git branch --show-current)
+
+          for branch in $FILTERED_BRANCHES; do
+            if git branch --contains $CURRENT_BRANCH $branch >/dev/null 2>&1; then
+              echo "Processing branch $branch that contains $CURRENT_BRANCH"
+            else
+              echo "Processing branch $branch that does not contain $CURRENT_BRANCH"
+            fi
+          done
