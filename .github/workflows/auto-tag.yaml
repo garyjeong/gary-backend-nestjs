@@ -32,10 +32,10 @@ jobs:
 
           for branch in $FILTERED_BRANCHES; do
             if git branch --contains $CURRENT_BRANCH $branch >/dev/null 2>&1; then
-
+              PR_NUMBER=$(gh pr list --state open | grep "$branch" | awk '{print $1}')
               echo "Adding label to $branch"
               curl --request POST \
-                --url https://api.github.com/repos/{owner}/{repo}/issues/$NUMBER/labels \
+                --url https://api.github.com/repos/{owner}/{repo}/issues/$PR_NUMBER/labels \
                 --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
                 --header 'content-type: application/json' \
                 --data "{\"labels\": [\"$LABEL\"]}"
