@@ -39,7 +39,7 @@ jobs:
             if git branch --contains $branch; then
               echo '5 ---------------'
               gh pr list --state open | grep $branch | awk '{print $1}'
-              PR_NUMBER=$(gh pr list --state open | grep $branch | awk '{print $1}')
+              PR_NUMBER=$(gh pr list --state open | grep -m1 "$branch" | awk '{print $1}')
               echo "PR NUM : $PR_NUMBER"
               curl --request POST \
                 --url https://api.github.com/repos/garyjeong/gary-backend-nestjs/issues/$PR_NUMBER/labels \
