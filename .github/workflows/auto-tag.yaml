@@ -20,7 +20,8 @@ jobs:
         run: |
           which git
           which grep
-          git branch --remotes --list --format "%(refname:lstrip=2)" | grep -o "feature/.*"
+          git branch --remotes --list
+          git branch --remotes --list | grep -o "feature/.*"
 
 
       - name: Filtering Feature Branches
