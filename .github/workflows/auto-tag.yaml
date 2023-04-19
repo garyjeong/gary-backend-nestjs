@@ -46,6 +46,8 @@ jobs:
           for branch in $FILTERED_BRANCHES; do
             echo "3---- $branch"
             if git branch --contains $branch; then
+              gh pr list --state open | grep $branch | awk '{print $1}'
+              echo '---------------'
               PR_NUMBER=$(gh pr list --state open | grep $branch | awk '{print $1}')
               echo "PR NUM : $PR_NUMBER"
               curl --request POST \
