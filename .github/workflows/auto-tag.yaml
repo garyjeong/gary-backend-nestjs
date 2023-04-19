@@ -19,7 +19,7 @@ jobs:
       - name: Labeling on filtered branches
         run: |
           git fetch
-          FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "origin/feature/.*")
+          FILTERED_BRANCHES=$(git branch --remotes --list | sed 's/origin\///' | grep -o "feature/.*")
           CURRENT_BRANCH=$(git branch --show-current)
           LABEL=""
 
@@ -34,7 +34,7 @@ jobs:
           for branch in $FILTERED_BRANCHES; do
             echo "ADD LABEL TO : $branch"
             if git branch --contains $branch; then
-              PR_NUMBER=$(gh pr list --state open | grep $branch | sed 's/origin\///' | awk '{print $1}')
+              PR_NUMBER=$(gh pr list --state open | grep $branch | awk '{print $1}')
               echo "PR NUM : $PR_NUMBER"
               curl --request POST \
                 --url https://api.github.com/repos/garyjeong/gary-backend-nestjs/issues/$PR_NUMBER/labels \
