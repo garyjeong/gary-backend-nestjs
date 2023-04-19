@@ -23,9 +23,11 @@ jobs:
           LABEL=""
 
           if [[ $CURRENT_BRANCH == 'main' ]]; then
-            LABEL='prod'
+            LABEL='production'
           elif [[ $CURRENT_BRANCH == 'develop' ]]; then
             LABEL='develop'
+          elif [[ $CURRENT_BRANCH == 'stage' ]]; then
+            LABEL='stage'
           fi
 
           for branch in $FILTERED_BRANCHES; do
