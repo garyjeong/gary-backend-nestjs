@@ -21,7 +21,7 @@ jobs:
 
       - name: Labeling on filtered branches
         run: |
-          CURRENT_BRANCH=$(git branch --show-current)
+          CURRENT_BRANCH="$(git branch --show-current)"
           LABEL=""
 
           if [[ $CURRENT_BRANCH == 'main' ]]; then
