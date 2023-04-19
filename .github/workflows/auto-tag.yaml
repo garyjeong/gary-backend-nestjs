@@ -18,10 +18,7 @@ jobs:
 
       - name: Branch Check
         run: |
-          which git
-          which grep
-          git branch --remotes --list
-          git branch --remotes --list | grep -o "feature/.*"
+          git branch --remotes --list | grep -o ".*"
 
 
       - name: Filtering Feature Branches
