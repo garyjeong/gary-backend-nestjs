@@ -27,7 +27,7 @@ jobs:
       - name: Labeling on filtered branches
         run: |
           git fetch
-          FILTERED_BRANCHES=$(git branch --remotes --list | grep -o ".*/feature/.*")
+          FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "feature/.*")
           CURRENT_BRANCH=$(git branch --show-current)
           LABEL=""
 
@@ -39,8 +39,12 @@ jobs:
             LABEL='stage'
           fi
 
+          echo "1---- $CURRENT_BRANCH"
+          echo "2---- $FILTERED_BRANCHES"
+          echo "3---- $LABEL"
+
           for branch in $FILTERED_BRANCHES; do
-            echo "ADD LABEL TO : $branch"
+            echo "3---- $branch"
             if git branch --contains $branch; then
               PR_NUMBER=$(gh pr list --state open | grep $branch | awk '{print $1}')
               echo "PR NUM : $PR_NUMBER"
