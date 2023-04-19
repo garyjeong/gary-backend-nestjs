@@ -21,8 +21,8 @@ jobs:
           CURRENT_BRANCH=$(git branch --show-current)
           LABEL=""
 
-          if [[ $CURRENT_BRANCH == 'front' ]]; then
-            LABEL='dev merged'
+          if [[ $CURRENT_BRANCH == 'stage' ]]; then
+            LABEL='stage'
           elif [[ $CURRENT_BRANCH == 'qa' ]]; then
             LABEL='front merged'
           fi
