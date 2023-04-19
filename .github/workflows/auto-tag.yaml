@@ -16,6 +16,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Branch Check
+        run: |
+          which git
+          which grep
+          git branch --remotes --list --format "%(refname:lstrip=2)" | grep -o "feature/.*"
+
+
       - name: Filtering Feature Branches
         run: |
           export FILTERED_BRANCHES=$(git branch --remotes --list | grep -o "feature/.*")
