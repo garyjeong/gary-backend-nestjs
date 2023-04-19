@@ -31,6 +31,9 @@ jobs:
             LABEL='stage'
           fi
 
+          echo "test"
+          echo git branch --contains feature/pppp
+
           for branch in $FILTERED_BRANCHES; do
             if git branch --contains $branch | grep "$CURRENT_BRANCH"; then
               PR_NUMBER=$(gh pr list --state open | grep -m1 feature/${branch##*/} | awk '{print $1}')
