@@ -1,13 +1,13 @@
 name: My Workflow
-on: 
+on:
   push:
     branches:
-      - main
-      - develop
-      - stage
+      - front
+      - qa
 
 env:
-  FILTERED_BRANCHES: ""
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
 jobs:
   list-pull-requests:
@@ -15,7 +15,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
+
       - name: Labeling on filtered branches
         run: |
           git fetch
@@ -23,27 +23,20 @@ jobs:
           CURRENT_BRANCH=$(git branch --show-current)
           LABEL=""
 
-          if [[ $CURRENT_BRANCH == 'main' ]]; then
-            LABEL='production'
-          elif [[ $CURRENT_BRANCH == 'develop' ]]; then
-            LABEL='develop'
-          elif [[ $CURRENT_BRANCH == 'stage' ]]; then
-            LABEL='stage'
+          if [[ $CURRENT_BRANCH == 'front' ]]; then
+            LABEL='dev merged'
+          elif [[ $CURRENT_BRANCH == 'qa' ]]; then
+            LABEL='front merged'
           fi
 
           for branch in $FILTERED_BRANCHES; do
             if git branch --contains $branch | grep "$CURRENT_BRANCH"; then
-              gh pr list --state open | grep $branch | awk '{print $1}'
-              PR_NUMBER=$(gh pr list --state open | grep -m1 "$branch" | awk '{print $1}')
-              echo "PR NUM : $PR_NUMBER"
+              PR_NUMBER=$(gh pr list --state open | grep -m1 feature/${branch##*/} | awk '{print $1}')
+
               curl --request POST \
-                --url https://api.github.com/repos/garyjeong/gary-backend-nestjs/issues/$PR_NUMBER/labels \
-                --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+                --url https://api.github.com/repos/Rencar-dev/overseas-api/issues/$PR_NUMBER/labels \
+                --header 'authorization: Bearer ${{ secrets.GH_TOKEN }}' \
                 --header 'content-type: application/json' \
                 --data '{"labels": ["'"$LABEL"'"]}'
             fi
           done
-        
-
-
-        
