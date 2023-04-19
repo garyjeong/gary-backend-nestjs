@@ -16,13 +16,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-
-      - name: Set up GitHub CLI
-        uses: actions/setup-node@v2.1.5
-        with:
-          node-version: '14'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install GitHub CLI
+        uses: cli-action/setup@v2
 
       - name: Labeling on filtered branches
         run: |
@@ -39,15 +34,14 @@ jobs:
             LABEL='stage'
           fi
 
-          echo "1---- $CURRENT_BRANCH"
-          echo "2---- $FILTERED_BRANCHES"
-          echo "3---- $LABEL"
-
           for branch in $FILTERED_BRANCHES; do
-            echo "3---- $branch"
+            echo "1---- $CURRENT_BRANCH"
+            echo "2---- $FILTERED_BRANCHES"
+            echo "3---- $LABEL"
+            echo "4---- $branch"
             if git branch --contains $branch; then
+              echo '5 ---------------'
               gh pr list --state open | grep $branch | awk '{print $1}'
-              echo '---------------'
               PR_NUMBER=$(gh pr list --state open | grep $branch | awk '{print $1}')
               echo "PR NUM : $PR_NUMBER"
               curl --request POST \
