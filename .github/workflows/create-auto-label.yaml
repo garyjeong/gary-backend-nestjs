@@ -33,12 +33,12 @@ jobs:
 
           for branch in $FILTERED_BRANCHES; do
             echo Branch $branch
-            if git branch --contains $branch | grep "$CURRENT_BRANCH"; then
+            PR_NUMBER=$(gh pr list --state open | grep -m1 feature/${branch##*/} | awk '{print $1}')
+
+            if [[ -n "$PR_NUMBER" ]]; then
               echo Detect $branch
               echo https://api.github.com/repos/${{github.repository}}/issues/$PR_NUMBER/labels
               
-              PR_NUMBER=$(gh pr list --state open | grep -m1 feature/${branch##*/} | awk '{print $1}')
-
               curl -X POST https://api.github.com/repos/${{github.repository}}/issues/$PR_NUMBER/labels \
               -H "Authorization: Bearer ${{ env.GH_TOKEN }}" \
               -d '{"labels": ["'"$LABEL"'"]}'
