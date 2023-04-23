@@ -28,17 +28,14 @@ jobs:
           LABEL=""
 
           if [[ $CURRENT_BRANCH == 'develop' ]]; then
-            LABEL='develop'
+            LABEL='dev merged'
           fi
 
           for branch in $FILTERED_BRANCHES; do
-            echo Branch feature/${branch##*/}
-            PR_NUMBER=$(gh pr list --state open | awk -F '\t' '{print $1, $3}' | grep -w feature/${branch##*/} | awk '{print $1}')
-            echo PR Number $PR_NUMBER
-            if [[ -n "$PR_NUMBER" ]]; then
-              echo Detect $branch
-              echo https://api.github.com/repos/${{github.repository}}/issues/$PR_NUMBER/labels
-              
+          echo
+            if git branch --contains $branch | grep "$CURRENT_BRANCH"; then
+              PR_NUMBER=$(gh pr list --state open | awk -F '\t' '{print $1, $3}' | grep -w feature/${branch##*/} | awk '{print $1}')
+
               curl -X POST https://api.github.com/repos/${{github.repository}}/issues/$PR_NUMBER/labels \
               -H "Authorization: Bearer ${{ env.GH_TOKEN }}" \
               -d '{"labels": ["'"$LABEL"'"]}'
