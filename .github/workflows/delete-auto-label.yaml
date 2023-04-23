@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - develop
+  pull_request:
+    branches: 
+      - develop
 
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -14,9 +17,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Delete Label
+
+      - name: Fetch
         run: |
           git fetch
+
+      - name: Delete Label
+        run: |
           FILTERED_BRANCHES=$(git branch --remotes --list | grep "feature/.*")
           CURRENT_BRANCH=$(git branch --show-current)
           LABEL=""
@@ -26,7 +33,10 @@ jobs:
           fi
 
           for branch in $FILTERED_BRANCHES; do
+            echo Branch $branch
             if !(git branch --contains $branch | grep "$CURRENT_BRANCH"); then
+              echo Detect $branch
+              
               PR_NUMBER=$(gh pr list --state open | grep -m1 feature/${branch##*/} | awk '{print $1}')
 
               curl -X POST https://api.github.com/repos/${{github.repository}}/issues/$PR_NUMBER/labels \
