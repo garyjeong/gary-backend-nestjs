@@ -34,7 +34,7 @@ jobs:
 
           for branch in $FILTERED_BRANCHES; do
             echo Branch $branch
-            if !(git branch --contains $branch | grep "$CURRENT_BRANCH"); then
+            if ! git branch --contains $branch | grep "$CURRENT_BRANCH"; then
               echo Detect $branch
 
               PR_NUMBER=$(gh pr list --state open | grep -m1 feature/${branch##*/} | awk '{print $1}')
