@@ -32,9 +32,9 @@ jobs:
           fi
 
           for branch in $FILTERED_BRANCHES; do
-          echo
             if git branch --contains $branch | grep "$CURRENT_BRANCH"; then
               PR_NUMBER=$(gh pr list --state open | awk -F '\t' '{print $1, $3}' | grep -w feature/${branch##*/} | awk '{print $1}')
+              echo PR NUM : $PR_NUMBER
 
               curl -X POST https://api.github.com/repos/${{github.repository}}/issues/$PR_NUMBER/labels \
               -H "Authorization: Bearer ${{ env.GH_TOKEN }}" \
