@@ -33,7 +33,7 @@ jobs:
 
           for branch in $FILTERED_BRANCHES; do
             echo Branch feature/${branch##*/}
-            PR_NUMBER=$(gh pr list --state open | awk -F '\t' '{print $1, $3}' | grep -w $branch | awk '{print $1}')
+            PR_NUMBER=$(gh pr list --state open | awk -F '\t' '{print $1, $3}' | grep -w feature/${branch##*/} | awk '{print $1}')
             echo PR Number $PR_NUMBER
             if [[ -n "$PR_NUMBER" ]]; then
               echo Detect $branch
