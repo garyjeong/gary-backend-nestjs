@@ -1,0 +1,36 @@
+name: Create Label
+on:
+  push:
+    branches:
+      - develop
+
+env:
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  list-pull-requests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create Labeling on filtered branches
+        run: |
+          git fetch
+          FILTERED_BRANCHES=$(git branch --remotes --list | grep "feature/.*")
+          CURRENT_BRANCH=$(git branch --show-current)
+          LABEL=""
+
+          if [[ $CURRENT_BRANCH == 'develop' ]]; then
+            LABEL='dev merged'
+          fi
+
+          for branch in $FILTERED_BRANCHES; do
+            if git branch --contains $branch | grep "$CURRENT_BRANCH"; then
+              PR_NUMBER=$(gh pr list --state open | grep -m1 feature/${branch##*/} | awk '{print $1}')
+
+              curl -X POST https://api.github.com/repos/${{github.repository}}/issues/$PR_NUMBER/labels \
+              -H "Authorization: Bearer ${{ env.GH_TOKEN }}" \
+              -d '{"labels": ["'"$LABEL"'"]}'
+            fi
+          done
