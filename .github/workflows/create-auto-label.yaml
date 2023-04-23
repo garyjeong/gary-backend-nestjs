@@ -8,13 +8,13 @@ env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  creat-label:
+  create-label:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Create Labeling on filtered branches
+      - name: Create Label
         run: |
           git fetch
           FILTERED_BRANCHES=$(git branch --remotes --list | grep "feature/.*")
