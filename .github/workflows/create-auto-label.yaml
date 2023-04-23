@@ -28,7 +28,7 @@ jobs:
           LABEL=""
 
           if [[ $CURRENT_BRANCH == 'develop' ]]; then
-            LABEL='dev merged'
+            LABEL='develop'
           fi
 
           for branch in $FILTERED_BRANCHES; do
