@@ -29,18 +29,18 @@ jobs:
           LABEL=""
 
           if [[ $CURRENT_BRANCH == 'develop' ]]; then
-            LABEL='dev merged'
+            LABEL='develop'
           fi
 
           for branch in $FILTERED_BRANCHES; do
             echo Branch $branch
             if !(git branch --contains $branch | grep "$CURRENT_BRANCH"); then
               echo Detect $branch
-              
+
               PR_NUMBER=$(gh pr list --state open | grep -m1 feature/${branch##*/} | awk '{print $1}')
 
-              curl -X POST https://api.github.com/repos/${{github.repository}}/issues/$PR_NUMBER/labels \
-              -H "Authorization: Bearer ${{ env.GH_TOKEN }}" \
-              -d '{"labels": ["'"$LABEL"'"]}'
+              curl -X DELETE "https://api.github.com/repos/${{github.repository}}/issues/$PR_NUMBER/labels/${LABEL}" \
+              -H "Accept: application/vnd.github.v3+json" \
+              -H "Authorization: Bearer ${{ env.GH_TOKEN }}"
             fi
           done
