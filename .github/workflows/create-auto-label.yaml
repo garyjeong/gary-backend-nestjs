@@ -14,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Create Labeling on filtered branches
+      - name: Create Label
         run: |
           git fetch
           FILTERED_BRANCHES=$(git branch --remotes --list | grep "feature/.*")
