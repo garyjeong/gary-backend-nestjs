@@ -8,7 +8,7 @@ const app_env = process.env.APP_ENV;
 dotenv.config({
   path: path.resolve(
     'envs',
-    app_env || app_env === undefined ? '.env' : `.env.${app_env}`,
+    app_env || app_env === undefined ? '.env.local' : `.env.${app_env}`,
   ),
 });
 
