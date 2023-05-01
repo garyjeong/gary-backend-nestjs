@@ -30,7 +30,7 @@ export class PhotoService {
       return await this.photoRepository.find({
         where: {
           folder: {
-            id: folder.id,
+            uuid: folder.uuid,
           },
           deleted_at: null,
         },
@@ -94,6 +94,27 @@ export class PhotoService {
       return result;
     } catch (e) {
       console.log(e);
+      return e;
+    }
+  }
+
+  async updatePhoto(photo_id: string, memo: string): Promise<any> {
+    try {
+      if (!photo_id) {
+        throw new CustomInvalidError('검색 조건이 없습니다.')
+      }
+
+      if (!validate(photo_id)) {
+        throw new CustomInternalError('검색 ID가 유효하지 않습니다.')
+      }
+
+      return await this.photoRepository.findOne({
+        where: {
+          uuid: photo_id,
+          deleted_at: null,
+        },
+      });
+    } catch (e) {
       return e;
     }
   }
