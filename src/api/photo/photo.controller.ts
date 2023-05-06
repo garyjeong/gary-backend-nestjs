@@ -40,12 +40,20 @@ export class PhotoController {
     return await this.photoService.makePhoto(folder_id, memo, files);
   }
 
-  @Patch()
+  @Patch('')
+  async updatePhoto(
+    @Query('p') photo_id: string,
+    @Body('memo') memo: string,
+  ): Promise<any> {
+    return await this.photoService.updatePhoto(photo_id, memo);
+  }
+
+  @Patch('move')
   async movePhoto(
-    @Query('f') folder_id: string,
+    @Query('f') new_folder_id: string,
     @Body('photos') photos: string[],
   ): Promise<any> {
-    return await this.photoService.movePhoto(folder_id, photos);
+    return await this.photoService.movePhoto(new_folder_id, photos);
   }
 
   @Delete()

@@ -17,7 +17,7 @@ export class PhotoService {
     private readonly folderRepository: Repository<Folder>,
     @InjectRepository(Photo)
     private readonly photoRepository: Repository<Photo>,
-  ) {}
+  ) { }
 
   async getPhotoList(folder_id: string): Promise<any> {
     try {
@@ -108,28 +108,38 @@ export class PhotoService {
         throw new CustomInternalError('검색 ID가 유효하지 않습니다.')
       }
 
-      return await this.photoRepository.findOne({
+      const photo = await this.photoRepository.findOne({
         where: {
           uuid: photo_id,
           deleted_at: null,
         },
       });
+
+      if (!photo) {
+        throw new CustomInvalidError(
+          '해당 사진이 삭제되었거나 존재하지 않습니다.',
+        );
+      }
+
+      photo.memo = memo;
+
+      return await this.photoRepository.save(photo);
     } catch (e) {
       return e;
     }
   }
 
-  async movePhoto(folder_id: string, photos: string[]): Promise<any> {
+  async movePhoto(new_folder_id: string, photos: string[]): Promise<any> {
     try {
-      if (!folder_id) {
+      if (!new_folder_id) {
         throw new CustomInvalidError('검색 조건이 없습니다.');
       }
-      if (!validate(folder_id)) {
+      if (!validate(new_folder_id)) {
         throw new CustomInternalError('검색 ID가 유효하지 않습니다.');
       }
 
       const folder = await this.folderRepository.findOne({
-        where: { uuid: folder_id },
+        where: { uuid: new_folder_id },
         withDeleted: false,
       });
 
