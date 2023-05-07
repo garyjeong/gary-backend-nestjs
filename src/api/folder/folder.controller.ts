@@ -11,19 +11,22 @@ import {
 import { FolderService } from './folder.service';
 
 import { ResponseFolderDto } from './dtos/response.dto';
-import { Folder } from 'src/typeorm/entities';
 
 @Controller('folder')
 export class FolderController {
   constructor(private readonly folderService: FolderService) {}
 
   @Get()
-  async getFolder(@Query('f') uuid: string): Promise<Folder | Folder[]> {
+  async getFolder(
+    @Query('f') uuid?: string,
+  ): Promise<ResponseFolderDto | ResponseFolderDto[]> {
     return await this.folderService.getFolder(uuid);
   }
 
   @Post()
-  async makeFolder(@Body('name') name: string): Promise<ResponseFolderDto> {
+  async makeFolder(
+    @Body('name') name: string,
+  ): Promise<ResponseFolderDto> {
     return await this.folderService.makeFolder(name);
   }
 

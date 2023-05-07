@@ -17,7 +17,7 @@ export class PhotoService {
     private readonly folderRepository: Repository<Folder>,
     @InjectRepository(Photo)
     private readonly photoRepository: Repository<Photo>,
-  ) { }
+  ) {}
 
   async getPhotoList(folder_id: string): Promise<any> {
     try {
@@ -101,11 +101,11 @@ export class PhotoService {
   async updatePhoto(photo_id: string, memo: string): Promise<any> {
     try {
       if (!photo_id) {
-        throw new CustomInvalidError('검색 조건이 없습니다.')
+        throw new CustomInvalidError('검색 조건이 없습니다.');
       }
 
       if (!validate(photo_id)) {
-        throw new CustomInternalError('검색 ID가 유효하지 않습니다.')
+        throw new CustomInternalError('검색 ID가 유효하지 않습니다.');
       }
 
       const photo = await this.photoRepository.findOne({
@@ -129,7 +129,10 @@ export class PhotoService {
     }
   }
 
-  async movePhoto(new_folder_id: string, photos: string[]): Promise<any> {
+  async movePhoto(
+    new_folder_id: string,
+    photos: string[],
+  ): Promise<any> {
     try {
       if (!new_folder_id) {
         throw new CustomInvalidError('검색 조건이 없습니다.');
