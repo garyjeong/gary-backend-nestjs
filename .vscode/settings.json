@@ -1,9 +1,12 @@
 {
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
-  "eslint.format.enable": false,
-  "editor.defaultFoldingRangeProvider": null,
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSaveMode": "modifications",
-  "notebook.formatOnSave.enabled": true
+  "eslint.format.enable": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.formatOnSaveMode": "file",
+  "notebook.formatOnSave.enabled": true,
+  "prettier.prettierPath": ".prettierrc",
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

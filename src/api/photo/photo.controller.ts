@@ -31,7 +31,9 @@ export class PhotoController {
   }
 
   @Post()
-  @UseInterceptors(FilesInterceptor('photo', 10, { dest: './uploads' }))
+  @UseInterceptors(
+    FilesInterceptor('photo', 10, { dest: './uploads' }),
+  )
   async makePhotos(
     @Query('f') folder_id: string,
     @Body('memo') memo: string,

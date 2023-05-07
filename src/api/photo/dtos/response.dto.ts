@@ -5,7 +5,7 @@ import {
   Length,
 } from 'class-validator';
 // import { CommonResponseDto } from 'src/common/common.dto';
-import { Folder } from 'src/typeorm/entities';
+import { Photo } from 'src/typeorm/entities';
 import { format } from 'date-fns';
 
 class ResponseFolderDto {
@@ -13,8 +13,12 @@ class ResponseFolderDto {
   uuid: string;
 
   @IsString()
-  @Length(20)
-  name: string;
+  @Length(1000)
+  memo: string;
+
+  @IsString()
+  @Length(400)
+  url: string;
 
   @IsDateString()
   created_at: string;
@@ -22,15 +26,16 @@ class ResponseFolderDto {
   @IsDateString()
   updated_at: string;
 
-  constructor(folder: Folder) {
-    this.uuid = folder.uuid;
-    this.name = folder.name;
+  constructor(photo: Photo) {
+    this.uuid = photo.uuid;
+    this.memo = photo.memo;
+    this.url = photo.url;
     this.created_at = format(
-      new Date(folder.created_at),
+      new Date(photo.created_at),
       'yyyy-MM-dd HH:mm:ss',
     );
     this.updated_at = format(
-      new Date(folder.created_at),
+      new Date(photo.created_at),
       'yyyy-MM-dd HH:mm:ss',
     );
   }

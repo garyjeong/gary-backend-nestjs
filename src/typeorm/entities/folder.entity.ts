@@ -1,12 +1,10 @@
 import {
   Entity,
   Column,
-  PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
   Generated,
-  ManyToOne,
   OneToMany,
 } from 'typeorm';
 import { Photo } from './photo.entity';

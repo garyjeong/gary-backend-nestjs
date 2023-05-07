@@ -2,7 +2,7 @@ import { IsString, IsUUID, Length } from 'class-validator';
 
 class GetFolderDto {
   @IsUUID('4')
-  uuid: string;
+  uuid?: string;
 }
 
 class MakeFolderDto {
@@ -25,4 +25,9 @@ class DeleteFolderDto {
   uuid: string;
 }
 
-export { GetFolderDto, MakeFolderDto, PatchFolderDto, DeleteFolderDto };
+export {
+  GetFolderDto,
+  MakeFolderDto,
+  PatchFolderDto,
+  DeleteFolderDto,
+};

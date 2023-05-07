@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   CustomInternalError,
   CustomInvalidError,
+  CustomNotFoundError,
   ORMError,
 } from 'src/common/errors';
 import { validate } from 'uuid';
@@ -17,40 +18,55 @@ export class FolderService {
     private readonly folderRepository: Repository<Folder>,
   ) {}
 
-  async getFolder(uuid: string): Promise<Folder | Folder[]> {
+  async getFolder(
+    uuid: string,
+  ): Promise<ResponseFolderDto | ResponseFolderDto[]> {
     try {
+      let folders;
       if (!uuid) {
-        return await this.folderRepository.find({
+        folders = await this.folderRepository.find({
           where: {
             deleted_at: null,
           },
         });
-      }
-      if (!validate(uuid)) {
-        throw new CustomInternalError('검색 ID가 유효하지 않습니다.');
+      } else {
+        if (!validate(uuid)) {
+          throw new CustomInternalError(
+            '검색 ID가 유효하지 않습니다.',
+          );
+        }
+
+        folders = await this.folderRepository.find({
+          where: {
+            uuid: uuid,
+            deleted_at: null,
+          },
+        });
       }
 
-      return await this.folderRepository.findOne({
-        where: {
-          uuid: uuid,
-          deleted_at: null,
-        },
-      });
+      if (!folders) {
+        throw new CustomNotFoundError('폴더를 찾을 수 없습니다.');
+      }
+      return folders.map((folder) => new ResponseFolderDto(folder));
     } catch (e) {
-      return e;
+      throw new CustomInternalError(e.message);
     }
   }
 
   async makeFolder(name: string): Promise<ResponseFolderDto> {
     try {
-      return await this.folderRepository.save({ name: name });
+      const folder = await this.folderRepository.save({ name: name });
+      return new ResponseFolderDto(folder);
     } catch (e) {
       console.log(e);
       return e;
     }
   }
 
-  async updateFolder(uuid: string, name: string): Promise<ResponseFolderDto> {
+  async updateFolder(
+    uuid: string,
+    name: string,
+  ): Promise<ResponseFolderDto> {
     try {
       if (!uuid) {
         throw new CustomInvalidError('검색 조건이 없습니다.');
@@ -67,7 +83,9 @@ export class FolderService {
         throw new ORMError(`Not Found Folder : ${uuid}`);
       }
       folder.name = name;
-      return await this.folderRepository.save(folder);
+      await this.folderRepository.save(folder);
+
+      return new ResponseFolderDto(folder);
     } catch (e) {
       return e;
     }
